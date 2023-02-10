@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useColorScheme, StyleSheet, SafeAreaView } from 'react-native';
+import { useColorScheme, StyleSheet, SafeAreaView, FlatList } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { TopNavigation, TopNavigationAction, Icon, Divider, Layout, Text, Button } from '@ui-kitten/components';
+import { TopNavigation, TopNavigationAction, Icon, Divider, Layout, Card, Text } from '@ui-kitten/components';
+
+/* <-- Listas --> */
+var puntuacionBasicaIdoneidad = 0;
+var ssConductor = [];
 
 export const AsignacionSSScreen = ({ navigation }) => {
     /* <-- Icons --> */
@@ -11,87 +15,101 @@ export const AsignacionSSScreen = ({ navigation }) => {
     /* <-- Hooks --> */
     // Lista de direcciones.street par
     const [streetPar, setStreetPar] = useState([]);
-    // ista de ss cuando direcciones.street es par
+    // Lista de ss cuando direcciones.street es par
     const [ssStreetPar, setSsStreetPar] = useState([]);
-
-    /* Variables de estado */
-    var ss = 0; // Puntuación básica de idoneidad (SS)
+    // Lista de ss
+    const [ss, setSs] = useState([]);
 
     /* <-- Functions --> */
     // Regresa a la pantalla de bienvenida
-    const navigateBack = () => navigation.goBack();
+    const navigateBack = () => {
+        limpiarPuntuacionBasicaIdoneidad();
+
+        navigation.goBack();
+    };
+
     const goBackAction = () => <TopNavigationAction icon={goBackIcon} onPress={navigateBack} />;
 
-    // Limpia las listas
-    const limpiarListas = () => {
+    // Limpia las listas (arrays)
+    const limpiarPuntuacionBasicaIdoneidad = () => {
         setStreetPar([]);
         setSsStreetPar([]);
-
-        console.log("Listas limpiadas");
+        setSs([]);
     };
 
-    // Funcion donde si la longitud de direcciones.street es par, ss es el número de vocales del conductor.nombre multiplicado por 1,5
-    const calcularSSNombreCalle = () => {
-        var ss = 0; // Puntuación básica de idoneidad (SS)
-
-        // Recorre el arreglo de direcciones.street
+    // Función que realiza el algoritmo
+    const assifnarDireccion = () => {
+        // Recorrer direcciones.street
         for (let i = 0; i < direcciones.length; i++) {
-            // Si direcciones.street es par
-            if (direcciones[i].street.length % 2 === 0) {
-                // Agrega direcciones.street a setStreetPar
-                setStreetPar(streetPar => [...streetPar, direcciones[i].street]);
+            // Recorrer conductores.nombre
+            for (let j = 0; j < conductores.length; j++) {
+                // Si la longitud del direcciones.street es par
+                if (direcciones[i].street.length % 2 === 0) {
+                    // puntuacionBasicaIdoneidad es el número de vocales de conductores.nombre multiplicado por 1,5
+                    puntuacionBasicaIdoneidad = (conductores[j].nombre.match(/[aeiou]/gi) || conductores[j].nombre.match(/[AEIOU]/gi)).length * 1.5;
 
-                // Contar vocales de cada conductor.nombre y multiplicar el numero de vocales de cada conductor.nombre por 1.5
-                for (let j = 0; j < conductores.length; j++) {
-                    // Contar vocales de cada conductor.nombre
-                    var nombre = conductores[j].nombre;
-                    //var vocales = nombre.match(/[aeiou]/gi);
-                    var vocales = nombre.match(/[aeiou]/gi) || nombre.match(/[AEIOU]/gi);
-                    var numVocales = vocales ? vocales.length : 0;
+                    // Agrupa los conductores con su puntuación, y asignar una dirección.street
+                    ssConductor.push({ id: i, puntuacion: puntuacionBasicaIdoneidad, conductor: conductores[j].nombre, direccion: direcciones[i].street });
 
-                    // Multiplicar el numero de vocales de cada conductor.nombre por 1.5
-                    ss = numVocales * 1.5;
+                    // console.log(puntuacionBasicaIdoneidad);
+                } else {
+                    // Si la longitud del direcciones.street es impar
+                    if (direcciones[i].street.length % 2 !== 0) {
+                        // puntuacionBasicaIdoneidad es el número de consonantes de conductores.nombre multiplicado por 1
+                        puntuacionBasicaIdoneidad = (conductores[j].nombre.match(/[bcdfghjklmnpqrstvwxyz]/gi) || conductores[j].nombre.match(/[BCDFGHJKLMNPQRSTVWXYZ]/gi)).length;
 
-                    var ssTwo = [
-                        {
-                            ss: ss,
-                            conductor: conductores[j].nombre
+                        // console.log(puntuacionBasicaIdoneidad);
+                    } else {
+                        // Si la longitud direcciones.street comparte algún factor común (además de 1) con conductores.nombre, puntuacionBasicaIdoneidad aumenta en un 50 % por encima puntuacionBasicaIdoneidad base
+                        if (direcciones[i].street.length % conductores[j].nombre.length === 0) {
+                            puntuacionBasicaIdoneidad = puntuacionBasicaIdoneidad * 1.5;
+
+                            // console.log(puntuacionBasicaIdoneidad);
                         }
-                    ]
+                    }
 
-                    // separar ss de cada conductor.nombre y agregarlo a ssStreetPar
-                    ssStreetPar.push(ssTwo);
+                    ssConductor.push({ id: i, puntuacion: puntuacionBasicaIdoneidad, conductor: conductores[j].nombre, direccion: direcciones[i].street });
                 }
-
-                // imprimir en consola el arreglo de ssStreetPar
-                console.log(ssStreetPar);
             }
+
+            // console.log(ssConductor);
         }
 
-        // console.log(streetPar); // Imprime en consola el arreglo de direcciones.street par
-        // console.log(ssStreetPar); // Imprime en consola el arreglo de ss cuando direcciones.street es par
-
-
-        /* NO SIRVEN */
-        // Agrega ss a setSsStreetPar
-        //setSsStreetPar(ssStreetPar => [...ssStreetPar, ss += 1.5]);
+        limpiarPuntuacionBasicaIdoneidad();
     };
+
+    /* <-- Render --> */
+    // Renderiza el FlatList
+    const renderQuery = ({ item }) => (
+        <Layout style={[styles.layout, themeContainerStyle]}>
+            <Card style={[styles.CardSS, themeContainerStyle]}>
+                <Text style={[styles.textCard, themeTextStyle]}>SS: {item.puntuacion}</Text>
+                <Text style={[styles.textCard, themeTextStyle]}>Conductor/a: {item.conductor}</Text>
+                <Text style={[styles.textCard, themeTextStyle]}>Dirección: {item.direccion}</Text>
+            </Card>
+        </Layout>
+    );
 
     // Modo oscuro ó claro
     const colorScheme = useColorScheme();
     const themeTextStyle = colorScheme === 'light' ? styles.lightThemeText : styles.darkThemeText;
     const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
 
+    /* <-- useEffect --> */
+    useEffect(() => {
+        assifnarDireccion();
+    }, []);
+
     return (
         <SafeAreaView style={[styles.safeAreaView, themeContainerStyle]}>
             <TopNavigation style={[themeContainerStyle]} title={evaProps => <Text {...evaProps} style={[themeTextStyle]}>Asignación de SS</Text>} alignment='center' accessoryLeft={goBackAction} />
             <Divider />
 
-            <Layout style={[styles.layout, themeContainerStyle]}>
-                <Text style={[themeTextStyle]} category='h1'>Perfil del usuario</Text>
-                <Button style={styles.button} onPress={limpiarListas}>Limpiar listas</Button>
-                <Button style={styles.button} onPress={calcularSSNombreCalle}>Calcular SS</Button>
-            </Layout>
+            <Card style={[styles.CardTotalButtom, themeContainerStyle]}>
+                <Text style={[styles.text, themeTextStyle]}>Puntuación básica de idoneidad (SS)</Text>
+            </Card>
+
+            <FlatList keyExtractor={item => item.id} data={ssConductor} renderItem={renderQuery} initialNumToRender={5} maxToRenderPerBatch={2} windowSize={10} />
 
             <StatusBar />
         </SafeAreaView>
@@ -102,13 +120,42 @@ const styles = StyleSheet.create({
     safeAreaView: {
         flex: 1
     },
-    backdrop: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    CardTotalButtom: {
+        flexDirection: 'column',
+        marginLeft: 2,
+        marginTop: 0,
+        marginRight: 2,
+        marginBottom: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20
+    },
+    CardSS: {
+        paddingLeft: 5,
+        paddingTop: 5,
+        paddingRight: 5,
+        paddingBottom: 5,
+        borderRadius: 50
+    },
+    text: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 25
+    },
+    textCard: {
+        alignSelf: 'center',
+        textAlign: 'center'
     },
     layout: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical: 10
+    },
+    button: {
+        marginHorizontal: 30,
+        marginBottom: 5,
+        borderRadius: 25
     },
     lightContainer: {
         backgroundColor: '#FFFFFF'
@@ -123,7 +170,6 @@ const styles = StyleSheet.create({
         color: '#FFFFFF'
     }
 });
-
 
 /* <-- Constants --> */
 const conductores = [

@@ -42,12 +42,12 @@ export const HomeScreen = ({ navigation }) => {
                 </Layout>
 
                 <Layout style={[styles.listaDatos, themeContainerStyle]}>
-                    <Text style={[styles.text, themeTextStyle]}>Véalos aquí los</Text>
+                    <Text style={[styles.text, themeTextStyle]}>Vea aquí los</Text>
                     <TouchableOpacity onPress={() => setShowConductores(true)}>
                         <Text style={[styles.textTap]}> conductores</Text>
                     </TouchableOpacity>
                     
-                    <Text style={[styles.text, themeTextStyle]}> y </Text>
+                    <Text style={[styles.text, themeTextStyle]}> y las </Text>
 
                     <TouchableOpacity onPress={() => setShowDirecciones(true)}>
                         <Text style={[styles.textTap]}>direcciones</Text>
