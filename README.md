@@ -13,6 +13,9 @@ Para poder correr ejecutar la aplicación móvil es necesario tener instalado:
 - [Expo Go](https://expo.dev/client)
 - [Node.JS (LTS)](https://nodejs.org/es)
 - Para macOS o Linux, [Watchman](https://facebook.github.io/watchman/docs/install#buildinstall)
+- Un editor de código como [Visual Studio Code](https://code.visualstudio.com/) o un entorno de desarrollo integrado como [Android Studio](https://developer.android.com/studio)
+
+_Ten en cuenta que si utilizas un editor de código deberás tener algún emulador de dispositivos móviles o tener el conocimiento de como emular la aplicación en un dispositivo móvil físico._
 
 #### Herramientas recomendadas:
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
