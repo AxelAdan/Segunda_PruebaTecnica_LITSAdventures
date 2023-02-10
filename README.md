@@ -19,4 +19,3 @@ _Ten en cuenta que si utilizas un editor de código deberás tener algún emulad
 
 #### Herramientas recomendadas:
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
-- [VS Code](https://code.visualstudio.com)
