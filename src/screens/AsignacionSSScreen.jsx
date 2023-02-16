@@ -70,11 +70,11 @@ export const AsignacionSSScreen = ({ navigation }) => {
                 // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
                 conductores[i].direccion = direcciones[i].street;
 
-                //console.log(ss); // Imprime el valor de ss
+                // console.log(ss); // Imprime el valor de ss
 
                 // Cambia el valor de ss en conductores.ss
                 conductores[i].ss = ss;
-                console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
+                // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
             } else {
                 // Recorre conductores.nombre
                 for (let j = 0; j < conductores.length; j++) {
@@ -91,11 +91,11 @@ export const AsignacionSSScreen = ({ navigation }) => {
                 // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
                 conductores[i].direccion = direcciones[i].street;
 
-                //console.log(ss); // Imprime el valor de ss
+                // console.log(ss); // Imprime el valor de ss
 
                 // Cambia el valor de ss en conductores.ss
                 conductores[i].ss = ss;
-                console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
+                // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
             }
 
             // Si la longitud de dirección.street comparte algún factor común (además de uno) con conductores.nombre
@@ -115,11 +115,11 @@ export const AsignacionSSScreen = ({ navigation }) => {
                 // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
                 conductores[i].direccion = direcciones[i].street;
 
-                //console.log(ss); // Imprime el valor de ss
+                // console.log(ss); // Imprime el valor de ss
 
                 // Cambia el valor de ss en conductores.ss
                 conductores[i].ss = ss;
-                console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
+                // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
             }
         }        
     };
