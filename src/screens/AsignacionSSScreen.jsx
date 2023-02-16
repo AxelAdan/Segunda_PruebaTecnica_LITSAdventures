@@ -25,18 +25,18 @@ export const AsignacionSSScreen = ({ navigation }) => {
         { id: 9, street: '3102 Hillhaven Drive', city: 'Los Angeles', stateProvinceArea: 'California', phoneNumber: '323-921-8567', zipCode: '90071' },
         { id: 10, street: '1151 Sampson Street', city: 'Denver', stateProvinceArea: 'Colorado', phoneNumber: '303-615-4879', zipCode: '80202' }
     ]);
-    
+
     const [conductores, setConductores] = useState([ // Lista de conductores
-        { id: 1, nombre: 'James Lewis', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 2, nombre: 'Paul Gutierrez', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 3, nombre: 'Jack Brown', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 4, nombre: 'Amy Jones', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 5, nombre: 'Linda Henderson', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 6, nombre: 'Mitchell Huynh', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 7, nombre: 'Jacqueline Sandoval', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 8, nombre: 'Brandon Marshall', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 9, nombre: 'Albert Smith', numVocales: 0 ,ss: 0, direccion: '' },
-        { id: 10, nombre: 'Abigail Castillo DDS', numVocales: 0 ,ss: 0, direccion: '' }
+        { id: 1, nombre: 'James Lewis', numVocales: 0, ss: 0, direccion: '' },
+        { id: 2, nombre: 'Paul Gutierrez', numVocales: 0, ss: 0, direccion: '' },
+        { id: 3, nombre: 'Jack Brown', numVocales: 0, ss: 0, direccion: '' },
+        { id: 4, nombre: 'Amy Jones', numVocales: 0, ss: 0, direccion: '' },
+        { id: 5, nombre: 'Linda Henderson', numVocales: 0, ss: 0, direccion: '' },
+        { id: 6, nombre: 'Mitchell Huynh', numVocales: 0, ss: 0, direccion: '' },
+        { id: 7, nombre: 'Jacqueline Sandoval', numVocales: 0, ss: 0, direccion: '' },
+        { id: 8, nombre: 'Brandon Marshall', numVocales: 0, ss: 0, direccion: '' },
+        { id: 9, nombre: 'Albert Smith', numVocales: 0, ss: 0, direccion: '' },
+        { id: 10, nombre: 'Abigail Castillo DDS', numVocales: 0, ss: 0, direccion: '' }
     ]);
 
     /* <-- Functions --> */
@@ -87,7 +87,22 @@ export const AsignacionSSScreen = ({ navigation }) => {
                 conductores[i].ss = conductores[i].numVocales * 1;
                 // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
             }
-        }        
+
+            // Si la longitud de dirección.street comparte algún factor común (además de uno) con conductores.nombre
+            if (direcciones[i].street.length % conductores[i].nombre.length === 0) {
+                // Recorre conductores.nombre
+                for (let j = 0; j < conductores.length; j++) {
+                    // Incrementa 50% el valor de cada conductores.ss
+                    conductores[j].ss = conductores[j].ss * 1.5;
+                }
+
+                // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
+            }
+        }
+
+        // Ordena los conductores por ss de mayor a menor
+        conductores.sort((a, b) => b.ss - a.ss);
+        // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
     };
 
     /* <-- Render --> */
