@@ -4,13 +4,16 @@ import { StatusBar } from 'expo-status-bar';
 import { TopNavigation, TopNavigationAction, Icon, Divider, Layout, Card, Text } from '@ui-kitten/components';
 
 export const AsignacionSSScreen = ({ navigation }) => {
-    /* <-- Icons --> */
-    // Icono de boton de regresar
-    const goBackIcon = (props) => <Icon {...props} name='arrow-left-outline' fill='#797D7F' />;
+    /* <-- Icon --> */
+    const goBackIcon = (props) => <Icon {...props} name='arrow-left-outline' fill='#797D7F' />; // Icono de boton de regresar
 
     /* <-- Hooks --> */
-    // Lista de direcciones
-    const [direcciones, setDirecciones] = useState([
+    /*
+    * Los siguientes 2 “Hooks” se representan como una lista.
+    * Esto, suponiendo que podría almacenar datos del consumo de una API
+    * (por ello, el segundo elemento de los Hooks [set…] nunca es utilizado)
+    */
+    const [direcciones, setDirecciones] = useState([ // Lista de direcciones
         { id: 1, street: '4889 Yorkie Lane', city: 'Climax', stateProvinceArea: 'Michigan', phoneNumber: '912-871-4199', zipCode: '49034' },
         { id: 2, street: '492 Skips Lane', city: 'Casa', stateProvinceArea: 'Arkansas', phoneNumber: '928-530-8895', zipCode: '72025' },
         { id: 3, street: '1596 Cantebury Drive', city: 'Mineola', stateProvinceArea: 'New York', phoneNumber: '646-584-5030', zipCode: '11501' },
@@ -22,19 +25,18 @@ export const AsignacionSSScreen = ({ navigation }) => {
         { id: 9, street: '3102 Hillhaven Drive', city: 'Los Angeles', stateProvinceArea: 'California', phoneNumber: '323-921-8567', zipCode: '90071' },
         { id: 10, street: '1151 Sampson Street', city: 'Denver', stateProvinceArea: 'Colorado', phoneNumber: '303-615-4879', zipCode: '80202' }
     ]);
-
-    // Lista de conductores
-    const [conductores, setConductores] = useState([
-        { id: 1, nombre: 'James Lewis', ss: 0, direccion: '' },
-        { id: 2, nombre: 'Paul Gutierrez', ss: 0, direccion: '' },
-        { id: 3, nombre: 'Jack Brown', ss: 0, direccion: '' },
-        { id: 4, nombre: 'Amy Jones', ss: 0, direccion: '' },
-        { id: 5, nombre: 'Linda Henderson', ss: 0, direccion: '' },
-        { id: 6, nombre: 'Mitchell Huynh', ss: 0, direccion: '' },
-        { id: 7, nombre: 'Jacqueline Sandoval', ss: 0, direccion: '' },
-        { id: 8, nombre: 'Brandon Marshall', ss: 0, direccion: '' },
-        { id: 9, nombre: 'Albert Smith', ss: 0, direccion: '' },
-        { id: 10, nombre: 'Abigail Castillo DDS', ss: 0, direccion: '' }
+    
+    const [conductores, setConductores] = useState([ // Lista de conductores
+        { id: 1, nombre: 'James Lewis', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 2, nombre: 'Paul Gutierrez', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 3, nombre: 'Jack Brown', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 4, nombre: 'Amy Jones', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 5, nombre: 'Linda Henderson', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 6, nombre: 'Mitchell Huynh', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 7, nombre: 'Jacqueline Sandoval', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 8, nombre: 'Brandon Marshall', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 9, nombre: 'Albert Smith', numVocales: 0 ,ss: 0, direccion: '' },
+        { id: 10, nombre: 'Abigail Castillo DDS', numVocales: 0 ,ss: 0, direccion: '' }
     ]);
 
     /* <-- Functions --> */
@@ -47,78 +49,42 @@ export const AsignacionSSScreen = ({ navigation }) => {
 
     // Asigna una dirección a cada conductor
     const assignaDireccion = () => {
-        /* <-- Variables --> */
-        let ss = 0; // Punkuación básica de idoneidad
-        let numeroVocales = 0; // Número de vocales en el nombre (Del conductor)
-
         // Recorre direcciones.street
         for (let i = 0; i < direcciones.length; i++) {
             // Si la longitud de dirección.street es par
             if (direcciones[i].street.length % 2 === 0) {
                 // Recorre conductores.nombre
                 for (let j = 0; j < conductores.length; j++) {
-                    // ss es igual al número de vocales de conductores.nombre * 1.5
-                    for (let k = 0; k < conductores[j].nombre.length; k++) {
-                        if (conductores[j].nombre[k] === 'a'|| conductores[j].nombre[k] === 'e' || conductores[j].nombre[k] === 'i' || conductores[j].nombre[k] === 'o' || conductores[j].nombre[k] === 'u' || conductores[j].nombre[k] === 'A' || conductores[j].nombre[k] === 'E' || conductores[j].nombre[k] === 'I' || conductores[j].nombre[k] === 'O' || conductores[j].nombre[k] === 'U') {
-                            numeroVocales++;
-
-                            ss = numeroVocales * 1.5;
-                        }
+                    // Si la longitud de conductores.nombre contiene alguna vocal (a, e, i, o, u, A, E, I, O, U)
+                    if (conductores[j].nombre.includes('a') || conductores[j].nombre.includes('e') || conductores[j].nombre.includes('i') || conductores[j].nombre.includes('o') || conductores[j].nombre.includes('u') || conductores[j].nombre.includes('A') || conductores[j].nombre.includes('E') || conductores[j].nombre.includes('I') || conductores[j].nombre.includes('O') || conductores[j].nombre.includes('U')) {
+                        // Cambia el valor de conductores.numVocales por el número de vocales que contiene conductores.nombre
+                        conductores[j].numVocales = conductores[j].nombre.match(/[aeiou]/gi || /[AEIOU]/gi).length;
                     }
                 }
 
                 // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
                 conductores[i].direccion = direcciones[i].street;
-
                 // console.log(ss); // Imprime el valor de ss
 
-                // Cambia el valor de ss en conductores.ss
-                conductores[i].ss = ss;
+                // Multiplica el valor conductores.numVocales por 1.5 y lo asigna (cambia el valor) a conductores.ss
+                conductores[i].ss = conductores[i].numVocales * 1.5;
                 // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
-            } else {
+            } else { // Si la longitud de dirección.street es impar
                 // Recorre conductores.nombre
                 for (let j = 0; j < conductores.length; j++) {
-                    // ss es igual al número de vocales de conductores.nombre * 1.5
-                    for (let k = 0; k < conductores[j].nombre.length; k++) {
-                        if (conductores[j].nombre[k] === 'a'|| conductores[j].nombre[k] === 'e' || conductores[j].nombre[k] === 'i' || conductores[j].nombre[k] === 'o' || conductores[j].nombre[k] === 'u' || conductores[j].nombre[k] === 'A' || conductores[j].nombre[k] === 'E' || conductores[j].nombre[k] === 'I' || conductores[j].nombre[k] === 'O' || conductores[j].nombre[k] === 'U') {
-                            numeroVocales++;
-
-                            ss = numeroVocales * 1.5;
-                        }
+                    // Si la longitud de conductores.nombre contiene alguna vocal (a, e, i, o, u, A, E, I, O, U)
+                    if (conductores[j].nombre.includes('a') || conductores[j].nombre.includes('e') || conductores[j].nombre.includes('i') || conductores[j].nombre.includes('o') || conductores[j].nombre.includes('u') || conductores[j].nombre.includes('A') || conductores[j].nombre.includes('E') || conductores[j].nombre.includes('I') || conductores[j].nombre.includes('O') || conductores[j].nombre.includes('U')) {
+                        // Cambia el valor de conductores.numVocales por el número de vocales que contiene conductores.nombre
+                        conductores[j].numVocales = conductores[j].nombre.match(/[aeiou]/gi || /[AEIOU]/gi).length;
                     }
                 }
 
                 // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
                 conductores[i].direccion = direcciones[i].street;
-
                 // console.log(ss); // Imprime el valor de ss
 
-                // Cambia el valor de ss en conductores.ss
-                conductores[i].ss = ss;
-                // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
-            }
-
-            // Si la longitud de dirección.street comparte algún factor común (además de uno) con conductores.nombre
-            if (direcciones[i].street.length % conductores[i].nombre.length === 0) {
-                // Recorre conductores.nombre
-                for (let j = 0; j < conductores.length; j++) {
-                    // ss es igual al número de vocales de conductores.nombre * 1.5
-                    for (let k = 0; k < conductores[j].nombre.length; k++) {
-                        if (conductores[j].nombre[k] === 'a'|| conductores[j].nombre[k] === 'e' || conductores[j].nombre[k] === 'i' || conductores[j].nombre[k] === 'o' || conductores[j].nombre[k] === 'u' || conductores[j].nombre[k] === 'A' || conductores[j].nombre[k] === 'E' || conductores[j].nombre[k] === 'I' || conductores[j].nombre[k] === 'O' || conductores[j].nombre[k] === 'U') {
-                            numeroVocales++;
-
-                            ss = numeroVocales * 1.5;
-                        }
-                    }
-                }
-
-                // Cambia el valor conductores.direccion por el valor de direcciones.street en la posición i
-                conductores[i].direccion = direcciones[i].street;
-
-                // console.log(ss); // Imprime el valor de ss
-
-                // Cambia el valor de ss en conductores.ss
-                conductores[i].ss = ss;
+                // Multiplica el valor conductores.numVocales por 1 y lo asigna (cambia el valor) a conductores.ss
+                conductores[i].ss = conductores[i].numVocales * 1;
                 // console.log(conductores); // Imprime la lista de conductores con sus respectivas direcciones y ss
             }
         }        
